@@ -2,3 +2,4 @@ torch
 torchvision
 click
 numpy
+matplotlib
