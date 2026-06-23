@@ -2,8 +2,8 @@ import torchvision.transforms as T
 import torchvision.datasets as D
 
 # parameters
-H = 32
-W = 32
+H = 28
+W = 28
 mean = (0.5,) # classical value for grayscale
 std = (0.5,)
 

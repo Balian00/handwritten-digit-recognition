@@ -1,6 +1,7 @@
 import torch
 import os
 from utils.dataset import getDataset
+from utils.dataloader import getDataLoader
 from torchvision.utils import save_image
 
 
@@ -14,10 +15,16 @@ def train():
 
     print("Dataset loaded.")
 
+    print("Batch creation..")
+    
+    for images, labels in getDataLoader(dataset, 32, True) :
+        print(f'{images.shape}, {labels.shape}')
+
+
     # test: save one sample
     save_sample_as_png(dataset, index=0)
 
-
+# test of extraction from the dataset par ia
 def save_sample_as_png(dataset, index=0, output_path="sample.png"):
     img, label = dataset[index]
 
@@ -29,10 +36,10 @@ def save_sample_as_png(dataset, index=0, output_path="sample.png"):
         img = img.repeat(3, 1, 1)
 
     # IMPORTANT:
-    # si tu as Normalize(0.5, 0.5), il faut dénormaliser
+    # dénormalization (valeur pas modualire -> fichier de constante à définir)
     img = img * 0.5 + 0.5
 
-    # clamp pour éviter valeurs hors [0,1]
+    # clamp pour éviter valeurs hors [0,1] 
     img = torch.clamp(img, 0, 1)
 
     # sauvegarde PNG
