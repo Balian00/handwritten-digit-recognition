@@ -1,11 +1,7 @@
+from torch.utils.data import DataLoader
 import torchvision.transforms as T
 import torchvision.datasets as D
-
-# parameters
-H = 28
-W = 28
-mean = (0.5,) # classical value for grayscale
-std = (0.5,)
+from const import H, W, std, mean
 
 # object of transformation
 transform = T.Compose([
@@ -18,3 +14,7 @@ transform = T.Compose([
 def getDataset(root) :
     dataset = D.ImageFolder(root, transform=transform) # create object dataset (from torch)
     return dataset
+
+def getDataLoader(dataset, batch_size, shuffle) :
+    dataLoader = DataLoader(dataset, batch_size, shuffle)
+    return dataLoader
