@@ -6,23 +6,21 @@ Un classifieur de chiffres manuscrits (0-9) basé sur un CNN (réseau de neurone
 
 Ce README ainsi que les messages affichés dans la console (print statements) ont été générés avec l'aide d'une IA. Tout le reste — architecture du modèle, logique d'entraînement et d'évaluation, gestion des données, debug — a été écrit par moi.
 
-## Statut actuel (V1)
+## Statut actuel (V2)
 
-Le CNN entraîné sur le dataset Kaggle (images 28x28, niveaux de gris) atteint environ 91.8% de précision sur le set de test issu du même dataset, pour 15 epochs. Le modèle généralise cependant mal sur des photos prises à la volée avec la caméra de l'ordinateur : mauvais cadrage, chiffre petit ou excentré dans l'image, fond non uniforme. Les chiffres à traits fins (1, 4, 7) sont plus souvent mal reconnus que ceux à boucles marquées (6, 9), probablement à cause de ce décalage entre les images d'entraînement (propres, centrées) et les photos réelles (bruitées, mal cadrées).
+Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testés à la main, à l'exception du 4 — dont le style d'écriture diffère significativement des exemples présents dans le dataset d'entraînement. Le modèle a été entraîné sur un nouveau dataset (PNG à fond transparent, converti en fond blanc au chargement) avec augmentation de données (crop, rotation, variation de contraste/luminosité).
 
 ## Fonctionnement du code
 
-- `data.py` : charge le dataset avec `ImageFolder` et applique les transformations (redimensionnement, passage en niveaux de gris, conversion en tenseur, normalisation). Contient aussi `getDataLoader`, qui regroupe les images en batchs mélangés aléatoirement.
+- `data.py` : charge le dataset avec `ImageFolder` et un loader custom (`rgba_loader`) qui convertit les PNG à fond transparent en fond blanc. Applique les transformations (redimensionnement, niveaux de gris, normalisation) avec augmentation optionnelle (crop aléatoire, rotation légère, variation de contraste/luminosité).
 - `model.py` : définit l'architecture du CNN (deux blocs convolution + activation ReLU + pooling, suivis d'une couche entièrement connectée qui produit les 10 scores de classification).
 - `engine.py` : contient la boucle d'entraînement (`train`), l'évaluation par batch sur le set de test (`test`), et le test sur une image unique (`test_one`).
-- `main.py` : point d'entrée en ligne de commande (via `click`), qui sélectionne le mode d'exécution et gère le chargement/la sauvegarde des poids du modèle (`model.pth`). Les poids ne sont sauvegardés que lorsque la précision sur le set de test s'améliore par rapport au meilleur résultat précédent.
+- `main.py` : point d'entrée en ligne de commande (via `click`), qui sélectionne le mode d'exécution et gère le chargement/la sauvegarde des poids du modèle (`model.pth`, sauvegardés uniquement quand la précision s'améliore).
 
 ## Résultats
 
-| Epochs | Dimension d'entrée | Learning rate | Split train/test | Augmentation de données | Précision (test set) | Time |
-|---|---|---|---|---|---|---|
-
-D'autres lignes seront ajoutées au fur et à mesure des essais (augmentation de données par crop/rotation/contraste, autres learning rates, autres splits, etc.).
+| Epochs | Dimension d'entrée | Learning rate | Split train/test | Augmentation de données | Précision (test set) |
+|---|---|---|---|---|---|
 
 ## Installation
 
@@ -46,22 +44,22 @@ pip install -r requirements.txt
 
 Toutes les commandes ci-dessous sont à lancer depuis le dossier `src`, une fois l'environnement virtuel activé.
 
-Entraîner le modèle sur le dataset (sauvegarde automatiquement les meilleurs poids dans `model.pth`) :
+Entraîner le modèle :
 ```bash
 python main.py --mode train
 ```
 
-Évaluer la précision du modèle déjà entraîné sur l'ensemble du set de test :
+Évaluer la précision sur le set de test :
 ```bash
 python main.py --mode test
 ```
 
-Tester le modèle sur une image choisie aléatoirement dans le dataset (affiche la prédiction et compare au vrai label) :
+Tester sur une image aléatoire du dataset :
 ```bash
 python main.py --mode test_one
 ```
 
-Tester le modèle sur une image externe fournie par l'utilisateur (affiche uniquement la prédiction, sans comparaison) :
+Tester sur une image externe :
 ```bash
 python main.py --mode test_one --image suppdata/photo.png
 ```
@@ -81,8 +79,8 @@ dataset/
 
 ## Prochaines étapes
 
-- Refactoriser pour passer `H`, `W`, `lr`, `split`, `epochs` en paramètres des fonctions plutôt qu'en constantes importées directement, afin de pouvoir automatiser des runs avec différentes combinaisons d'hyperparamètres et compléter le tableau de résultats sans modification manuelle du code à chaque essai
-- Data augmentation (crop aléatoire, légère rotation, variation de contraste/luminosité) pour mieux généraliser sur des photos prises en conditions réelles
-- Comparer les performances selon la taille d'image d'entrée, le nombre d'epochs, le learning rate et le split train/test
-- Programmation propre et sécurisée : typage des paramètres et valeurs de retour dans les fonctions, docstrings décrivant le rôle de chaque fonction, gestion des erreurs (fichier image introuvable, format invalide, etc.)
-- Traduire tout en anglais
+- Résoudre la confusion sur le chiffre 4 (style d'écriture non représenté dans le dataset)
+- Compléter le tableau de résultats avec les différentes combinaisons d'hyperparamètres
+- Refactoriser pour passer `H`, `W`, `lr`, `split`, `epochs` en paramètres des fonctions afin d'automatiser les runs et compléter le tableau
+- Programmation propre et sécurisée : typage, docstrings, gestion des erreurs
+- Data augmentation offline si nécessaire
