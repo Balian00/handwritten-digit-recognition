@@ -3,6 +3,11 @@ import torch
 EPOCHS = 30
 SPLIT = 0.2
 LR = 0.01
+AUGMENTATION = True
+CROP = 4
+ROTATE = 10
+BRIGHTNESS = 0.3
+CONTRAST = 0.3
 
 # parameters, valeur standard en MNIST
 H = 28

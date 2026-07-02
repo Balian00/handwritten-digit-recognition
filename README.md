@@ -19,14 +19,8 @@ Le CNN entraîné sur le dataset Kaggle (images 28x28, niveaux de gris) atteint 
 
 ## Résultats
 
-| Epochs | Dimension d'entrée | Learning rate | Split train/test | Augmentation de données | Précision (test set) |
-|---|---|---|---|---|---|
-| 15 | 28x28 | 0.01 | 0.2 | Aucune | 91.8% |
-| 30 | 28x28 | 0.01 | 0.2 | Aucune | 94.1% |
-| 15 | 32x32 | 0.01 | 0.2 | Aucune | à compléter |
-| 30 | 32x32 | 0.01 | 0.2 | Aucune | à compléter |
-| 15 | 64x64 | 0.01 | 0.2 | Aucune | 92.3% |
-| 30 | 64x64 | 0.01 | 0.2 | Aucune | 92.3% |
+| Epochs | Dimension d'entrée | Learning rate | Split train/test | Augmentation de données | Précision (test set) | Time |
+|---|---|---|---|---|---|---|
 
 D'autres lignes seront ajoutées au fur et à mesure des essais (augmentation de données par crop/rotation/contraste, autres learning rates, autres splits, etc.).
 

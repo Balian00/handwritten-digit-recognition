@@ -5,10 +5,9 @@ from engine import train, test, test_one
 from model import DigitCNN
 from const import SPLIT, GENERATOR
 from torch.utils.data import random_split
-from data import getDataset
+from data import getDataset, getTransform
 import random
 from PIL import Image
-from data import transform
 
 
 def get_random_index(dataset):
@@ -43,7 +42,7 @@ def main(mode, image):
         if image is not None :
             # image store dans suppdata, au même format que dataset
             img = Image.open(image)
-            tensor = transform(img)
+            tensor = getTransform()(img)
             test_one(model, tensor)
         elif image is None :
             image, label = dataset[get_random_index(dataset)]
