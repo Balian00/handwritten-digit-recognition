@@ -80,7 +80,8 @@ dataset/
 ## Prochaines étapes
 
 - Résoudre la confusion sur le chiffre 4 (style d'écriture non représenté dans le dataset)
+- Be able to run on gpu on google colab
 - Compléter le tableau de résultats avec les différentes combinaisons d'hyperparamètres
-- Refactoriser pour passer `H`, `W`, `lr`, `split`, `epochs` en paramètres des fonctions afin d'automatiser les runs et compléter le tableau
 - Programmation propre et sécurisée : typage, docstrings, gestion des erreurs
 - Data augmentation offline si nécessaire
+- Traduction en anglais
