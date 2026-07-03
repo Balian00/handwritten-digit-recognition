@@ -9,18 +9,17 @@ from const import EPOCHS, SPLIT, GENERATOR, LR
 from torch.utils.data import random_split
 
 # test
-def test(model, test_dataset):
+def test(model, test_dataset) :
     model.eval()
-    device = next(model.parameters()).device #try to use gpu
     correct = 0
-    for images, labels in getDataLoader(test_dataset, 32, False):
-        images, labels = images.to(device), labels.to(device)
+    for images, labels in getDataLoader(test_dataset, 32, False) :
         predictions = model.forward(images)
         predicted_classes = predictions.argmax(dim=1)
         correct = correct + (predicted_classes == labels).sum()
     accuracy = correct / len(test_dataset) * 100
     model.train()
     return accuracy
+
 
 # train
 def train():
@@ -29,17 +28,15 @@ def train():
     print("─" * 40) #print by ai
     print("  Loading dataset...")  #print by ai
 
-    dataset = getDataset("../dataset")
+    dataset = getDataset("../dataset_old")
     # dataset, _ = random_split(dataset, [0.1, 0.9], generator=GENERATOR)
     train_dataset, test_dataset = random_split(dataset, [1-SPLIT, SPLIT], generator=GENERATOR)
 
     print(f"  Dataset ready  ({len(train_dataset)} train / {len(test_dataset)} test)") #print by ai
     print("─" * 40) #print by ai
     print("  Initializing model...") #print by ai
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") #gpu
-    model = DigitCNN().to(device) #gpu
-    # model = DigitCNN()
-    print(f'  Model ready, running on {device}.')
+    model = DigitCNN()
+    print("  Model ready.") #print by ai
     print("─" * 40) #print by ai
 
     criterion = nn.CrossEntropyLoss()
@@ -51,7 +48,6 @@ def train():
         print(f"\n  Epoch [{epoch + 1:2d}/{EPOCHS}]  training...", end="", flush=True) #print by ai
         loss = 0
         for images, labels in getDataLoader(train_dataset, 32, True) :
-            images, labels = images.to(device), labels.to(device)
             predictions = model.forward(images)
             losses = criterion(predictions, labels)
             loss = loss + losses
