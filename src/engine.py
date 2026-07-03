@@ -39,7 +39,7 @@ def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") #gpu
     model = DigitCNN().to(device) #gpu
     # model = DigitCNN()
-    print('  Model ready, running on {device}.')
+    print(f'  Model ready, running on {device}.')
     print("─" * 40) #print by ai
 
     criterion = nn.CrossEntropyLoss()
