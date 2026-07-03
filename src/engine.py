@@ -28,7 +28,7 @@ def train():
     print("─" * 40) #print by ai
     print("  Loading dataset...")  #print by ai
 
-    dataset = getDataset("../dataset_old")
+    dataset = getDataset("../dataset")
     # dataset, _ = random_split(dataset, [0.1, 0.9], generator=GENERATOR)
     train_dataset, test_dataset = random_split(dataset, [1-SPLIT, SPLIT], generator=GENERATOR)
 

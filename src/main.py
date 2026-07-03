@@ -42,7 +42,7 @@ def main(mode, image):
         if image is not None :
             # image store dans suppdata, au même format que dataset
             img = Image.open(image)
-            tensor = getTransform()(img)
+            tensor = getTransform(False)(img)
             test_one(model, tensor)
         elif image is None :
             image, label = dataset[get_random_index(dataset)]
