@@ -10,9 +10,12 @@ from torch.utils.data import random_split
 
 # test
 def test(model, test_dataset) :
+    
     model.eval()
+    device = next(model.parameters()).device
     correct = 0
     for images, labels in getDataLoader(test_dataset, 32, False) :
+        images, labels = images.to(device), labels.to(device)
         predictions = model.forward(images)
         predicted_classes = predictions.argmax(dim=1)
         correct = correct + (predicted_classes == labels).sum()
@@ -35,8 +38,9 @@ def train():
     print(f"  Dataset ready  ({len(train_dataset)} train / {len(test_dataset)} test)") #print by ai
     print("─" * 40) #print by ai
     print("  Initializing model...") #print by ai
-    model = DigitCNN()
-    print("  Model ready.") #print by ai
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = DigitCNN().to(device)
+    print(f"  Model ready, running on {device}.")
     print("─" * 40) #print by ai
 
     criterion = nn.CrossEntropyLoss()
@@ -48,6 +52,7 @@ def train():
         print(f"\n  Epoch [{epoch + 1:2d}/{EPOCHS}]  training...", end="", flush=True) #print by ai
         loss = 0
         for images, labels in getDataLoader(train_dataset, 32, True) :
+            images, labels = images.to(device), labels.to(device)
             predictions = model.forward(images)
             losses = criterion(predictions, labels)
             loss = loss + losses
@@ -72,6 +77,8 @@ def train():
 
 def test_one(model, tensor, label=None):
     model.eval()
+    device = next(model.parameters()).device
+    tensor = tensor.to(device)
     tensor = tensor.unsqueeze(0)
     guess = model.forward(tensor)
     predicted_class = guess.argmax(dim=1).item()
