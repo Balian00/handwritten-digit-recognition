@@ -4,7 +4,6 @@ import torchvision.datasets as D
 from const import H, W, AUGMENTATION, CROP, ROTATE, BRIGHTNESS, CONTRAST, std, mean
 
 
-# object of transformation
 def get_transform(augmentation: bool = AUGMENTATION) -> T.Compose:
     """Builds the transformation pipeline applied to the images.
 
@@ -48,13 +47,13 @@ def get_dataset(root: str, augmentation: bool) -> Dataset:
     Returns:
         The loaded dataset, ready to be split or passed to a DataLoader.
     """
-    dataset = D.ImageFolder(
+    return D.ImageFolder(
         root, transform=get_transform(augmentation)
     )  # create object dataset (from torch)
-    return dataset
+    
 
 
-def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool) -> DataLoader:
+def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers: int = 2, pin_memory: bool = True) -> DataLoader: # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer
     """Creates a DataLoader from a dataset.
 
     Args:
@@ -65,5 +64,4 @@ def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool) -> DataLoad
     Returns:
         An iterable DataLoader producing batches of tensors.
     """
-    data_loader = DataLoader(dataset, batch_size, shuffle)
-    return data_loader
+    return DataLoader(dataset, batch_size, shuffle, num_workers=2, pin_memory=True) # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer

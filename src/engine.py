@@ -10,7 +10,6 @@ from pathlib import Path
 MODEL_PATH = Path(__file__).parent / "model.pth"
 
 
-# test
 def test(model: nn.Module, test_dataset: Dataset) -> float:
     """Evaluates the model on a dataset and returns its accuracy.
 
@@ -27,17 +26,18 @@ def test(model: nn.Module, test_dataset: Dataset) -> float:
     model.eval()
     device = next(model.parameters()).device
     correct = 0
-    for images, labels in get_dataloader(test_dataset, 32, False):
-        images, labels = images.to(device), labels.to(device)
-        predictions = model.forward(images)
-        predicted_classes = predictions.argmax(dim=1)
-        correct = correct + (predicted_classes == labels).sum()
+    with torch.no_grad():  # disables gradient graph, saves memory and speeds up inference
+        data_loader = get_dataloader(test_dataset, 256, False) # larger batch at eval: no backprop, more memory available
+        for images, labels in data_loader:
+            images, labels = images.to(device), labels.to(device)
+            predictions = model(images)  # __call__ triggers forward() + nn.Module hooks
+            predicted_classes = predictions.argmax(dim=1)
+            correct += (predicted_classes == labels).sum()
     accuracy = correct / len(test_dataset) * 100
     model.train()
     return accuracy.item()
 
 
-# train
 def train(train_dataset: Dataset, test_dataset: Dataset) -> tuple[float, float]:
     """Trains the model and saves the best weights.
 
@@ -70,7 +70,7 @@ def train(train_dataset: Dataset, test_dataset: Dataset) -> tuple[float, float]:
         print(f"\n  Epoch [{epoch + 1:2d}/{EPOCHS}]  training...", end="", flush=True)
         for images, labels in get_dataloader(train_dataset, 32, True):
             images, labels = images.to(device), labels.to(device)
-            predictions = model.forward(images)
+            predictions = model(images)  # __call__ triggers forward() + nn.Module hooks
             losses = criterion(predictions, labels)
             losses.backward()
             optimizer.step()
@@ -114,7 +114,7 @@ def test_one(model: nn.Module, tensor: torch.Tensor, label: int = None) -> int:
     device = next(model.parameters()).device
     tensor = tensor.to(device)
     tensor = tensor.unsqueeze(0)
-    guess = model.forward(tensor)
+    guess = model(tensor)
     predicted_class = guess.argmax(dim=1).item()
     print("─" * 40)
     if label is not None:

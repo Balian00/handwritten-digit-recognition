@@ -1,103 +1,110 @@
 # Handwritten Digit Classifier
 
-Un classifieur de chiffres manuscrits (0-9) basé sur un CNN (réseau de neurones convolutionnel), entraîné avec [PyTorch](https://pytorch.org/) sur un [dataset Kaggle](https://www.kaggle.com/datasets/panghalvishesh/handwritten-digit).
+A handwritten digit classifier (0-9) based on a CNN (convolutional neural network), trained with [PyTorch](https://pytorch.org/) on a [Kaggle dataset](https://www.kaggle.com/datasets/panghalvishesh/handwritten-digit).
 
-## Utilisation de l'IA
+## Use of AI
 
-Ce README ainsi que les messages affichés dans la console (print statements) ont été générés avec l'aide d'une IA. L'ensemble du contenu a été relu et validé par l'auteur. Tout le reste — architecture du modèle, logique d'entraînement et d'évaluation, gestion des données, debug — a été écrit par moi.
+This README, as well as the messages printed to the console (print statements), were generated with the help of an AI. All content was reviewed and validated by the author. Everything else — model architecture, training and evaluation logic, data handling, debugging — was written by me.
 
-## Statut actuel (V2)
+## Current status (V3)
 
-Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testés à la main. Le modèle a été entraîné sur un dataset Kaggle de chiffres manuscrits avec augmentation de données (crop aléatoire, rotation légère aléatoire, variation de contraste et de luminosité aléatoires), ce qui améliore significativement la généralisation par rapport à la V1.
+The CNN correctly recognizes almost all handwritten digits tested manually. The model is trained on a Kaggle handwritten digit dataset with data augmentation (random crop, slight random rotation, random contrast and brightness variation), which significantly improves generalization compared to V1.
 
-*Remarque : Par la quasi-totalité des chiffres manuscrits testés à la main, on sous-entend tout chiffres relativement bien écrit comparé au dataset. En effet, le dataset comprend des représentations de chiffres parfois différentes de celles que le lecteur fait. Par conséquent, il vous est suggéré de comparer votre écriture à celle du dataset lors de tests manuels via `test_one`.*
+Compared to V2, this version focuses on code quality rather than new features:
+- **Security / robustness**: explicit error handling (missing dataset, invalid image, missing or corrupted `model.pth`) with clear messages instead of raw crashes.
+- **Clean, PEP8 code**: consistent naming, type hints on functions, docstrings, code written in English.
+- **Light optimizations**: `torch.no_grad()` during evaluation, `DataLoader` with `num_workers`/`pin_memory`, larger evaluation batch size than the training one.
+- **Shorter code**: removal of the custom batch generator (made unnecessary by `DataLoader`), factored paths and CLI logic in `main.py`.
 
-## Fonctionnement du code
+*Note: "almost all handwritten digits tested manually" refers to digits written in a way reasonably close to the dataset. Indeed, the dataset sometimes contains digit representations that differ from how the reader writes them. It is therefore suggested to compare your handwriting to the dataset's when testing manually via `test_one`.*
 
-- `data.py` : charge le dataset avec `ImageFolder` et applique les transformations (redimensionnement, niveaux de gris, normalisation) avec augmentation optionnelle (crop aléatoire, rotation légère, variation de contraste/luminosité).
-- `model.py` : définit l'architecture du CNN (deux blocs convolution + activation ReLU + pooling, suivis d'une couche entièrement connectée qui produit les 10 scores de classification).
-- `engine.py` : contient la boucle d'entraînement (`train`), l'évaluation par batch sur le set de test (`test`), et le test sur une image unique (`test_one`). Les poids ne sont sauvegardés que lorsque la précision s'améliore.
-- `main.py` : point d'entrée en ligne de commande (via `click`), qui sélectionne le mode d'exécution et gère le chargement/la sauvegarde des poids du modèle (`model.pth`).
-- `const.py` : centralise tous les hyperparamètres (epochs, learning rate, split, dimensions d'image, paramètres d'augmentation).
+## How the code works
 
-## Résultats
+- `data.py`: loads the dataset with `ImageFolder` and builds the transform pipeline (resizing, grayscale conversion, normalization) with optional augmentation (random crop, slight rotation, contrast/brightness variation). Also provides `get_dataloader`, which creates a `DataLoader` with `num_workers` and `pin_memory` to speed up batch loading.
+- `model.py`: defines the CNN architecture (two convolution blocks + ReLU activation + pooling, followed by a fully connected layer producing the 10 classification scores).
+- `engine.py`: contains the training loop (`train`), batch evaluation on the test set (`test`, under `torch.no_grad()`), and single-image testing (`test_one`). Weights are only saved when accuracy improves.
+- `main.py`: command-line entry point (via `click`) that selects the execution mode (`train`, `test`, `test_one`), loads/splits the dataset, and handles loading/saving the model weights (`model.pth`), with explicit error handling (missing files, invalid images).
+- `const.py`: centralizes all hyperparameters (epochs, learning rate, split, image dimensions, augmentation parameters, random generator seed).
+
+## Results
 
 | Epochs | H×W   | Learning rate | Augmentation  | Split | Accuracy (test set) | Time        |
 |--------|-------|---------------|---------------|-------|---------------------|-------------|
-| 30     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
-| 15     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
-| 50     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
-| 30     | 28×28 | 0.001         | Standard      | 0.14  | à compléter         | à compléter |
-| 50     | 28×28 | 0.001         | Standard      | 0.14  | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | False         | 0.14  | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Légère        | 0.14  | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Agressive     | 0.14  | à compléter         | à compléter |
-| 30     | 32×32 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
-| 50     | 32×32 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
+| 15     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
+| 50     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
+| 30     | 28×28 | 0.001         | Standard      | 0.14  | to be completed     | to be completed |
+| 50     | 28×28 | 0.001         | Standard      | 0.14  | to be completed     | to be completed |
+| 30     | 28×28 | 0.01          | False         | 0.14  | to be completed     | to be completed |
+| 30     | 28×28 | 0.01          | Light         | 0.14  | to be completed     | to be completed |
+| 30     | 28×28 | 0.01          | Aggressive    | 0.14  | to be completed     | to be completed |
+| 30     | 32×32 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
+| 50     | 32×32 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
+| 30     | 28×28 | 0.01          | Standard      | 0.2   | to be completed     | to be completed |
 
 ### Epochs, dimensions, split, learning rate
-Dans le standart MNIST, on retrouve les valeurs suivantes :
-- Epochs = 10 à 30, ici 30 est choisi pour un test principale
+In the standard MNIST setup, the following values are typically found:
+- Epochs = 10 to 30, here 30 is chosen for a main test
 - H = W = 28
 - LR = 0.01
 - Split = 0.14 (60K train + 10K test)
 
-### Augmentation 
-L'augmentation standart choisie correspond à :
-- un crop de 4 pixel
-- une rotation d'un angle de 10° maximum
-- une variation de luminosité et de contraste 0.3
-Tandis qu'une légère correspond à la moitié des valeurs et une agressive aux doubles
+### Augmentation
+The standard augmentation chosen corresponds to:
+- a crop of 4 pixels
+- a rotation of up to 10°
+- a brightness and contrast variation of 0.3
+
+A light augmentation corresponds to half these values, and an aggressive one to double them.
 
 ### Time
-Afin de permettre une comparaison la moins biaisée possible, les tests sont standardisé sur ... rendu accessible par la plateforme Kaggle. Le notebook utilisé pour les tests se trouve au lien suivant : https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
+To allow for the least biased comparison possible, tests are standardized on TO BE COMPLETED made accessible by the Kaggle platform. The notebook used for the tests can be found at the following link: https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
 
 ## Installation
 
-Créer et activer un environnement virtuel, puis installer les dépendances listées dans `requirements.txt`.
+Create and activate a virtual environment, then install the dependencies listed in `requirements.txt`.
 
-Sous Windows (PowerShell) :
+On Windows (PowerShell):
 ```bash
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Sous macOS/Linux :
+On macOS/Linux:
 ```bash
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Utilisation
+## Usage
 
-Toutes les commandes ci-dessous sont à lancer depuis le dossier `src`, une fois l'environnement virtuel activé.
+All the commands below should be run from the `src` folder, once the virtual environment is activated.
 
-Entraîner le modèle :
+Train the model:
 ```bash
 python main.py --mode train
 ```
 
-Évaluer la précision sur le set de test :
+Evaluate accuracy on the test set:
 ```bash
 python main.py --mode test
 ```
 
-Tester sur une image aléatoire du dataset :
+Test on a random image from the dataset:
 ```bash
 python main.py --mode test_one
 ```
 
-Tester sur une image externe :
+Test on an external image:
 ```bash
 python main.py --mode test_one --image adr_img.png
 ```
-*Remarque : un set d'image de test est disponible dans le dossier `test_data/`.*
+*Note: a set of test images is available in the `test_data/` folder.*
 
-## Structure du dataset
-La structure du dataset est la suivante :
+## Dataset structure
+The dataset structure is as follows:
 ```
 dataset/
 0/
@@ -106,19 +113,16 @@ dataset/
 ...
 9/
 ```
-Ce qui permet l'utilisation de `ImageFolder` from `torchvision.datasets`.
-## Prochaines étapes
+This allows the use of `ImageFolder` from `torchvision.datasets`.
 
-- Compléter le tableau de résultats avec différentes combinaisons d'hyperparamètres
-- PEP8 ?
-- Code le plus court
-- Optimisation
-- Traduction en anglais
+## Next steps
 
-## Continuité possible
+- Complete the results table with different combinations of hyperparameters
 
-Ce projet constitue une base extensible vers des problèmes de reconnaissance visuelle plus larges :
+## Possible continuations
 
-- **Lettres manuscrites** : étendre la classification aux 26 lettres de l'alphabet (voire aux deux casses), en s'appuyant sur la même architecture CNN avec un nombre de classes de sortie adapté.
-- **Chiffres en conditions réelles** : entraîner le modèle sur des chiffres photographiés dans des contextes variés — numéros de maison, plaques d'immatriculation, affichages numériques, manuscrits sur tableau blanc — pour une reconnaissance robuste hors contexte contrôlé.
-- **OCR généraliste** : combiner les deux extensions ci-dessus pour construire un système capable de lire des séquences de caractères (mots, nombres) plutôt qu'un seul caractère isolé.
+This project is an extensible base towards broader visual recognition problems:
+
+- **Handwritten letters**: extend the classification to the 26 letters of the alphabet (or even both cases), relying on the same CNN architecture with an adapted number of output classes.
+- **Digits in real-world conditions**: train the model on digits photographed in varied contexts — house numbers, license plates, digital displays, handwriting on a whiteboard — for robust recognition outside a controlled context.
+- **General-purpose OCR**: combine the two extensions above to build a system capable of reading sequences of characters (words, numbers) rather than a single isolated character.
