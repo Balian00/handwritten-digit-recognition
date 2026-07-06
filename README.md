@@ -22,7 +22,19 @@ Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testé
 
 ## Résultats
 
-*À compléter — tableau des runs avec différentes combinaisons d'hyperparamètres en cours de constitution (support GPU sur Google Colab en développement).*
+| Epochs | H×W   | Learning rate | Augmentation  | Split | Accuracy (test set) | Time        |
+|--------|-------|---------------|---------------|-------|---------------------|-------------|
+| 30     | 28×28 | 0.01          | Standard      | 0.2   | à compléter | à compléter |
+| 15     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+| 50     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.001         | Standard      | 0.2   | à compléter         | à compléter |
+| 50     | 28×28 | 0.001         | Standard      | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | False         | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Légère        | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Agressive     | 0.2   | à compléter         | à compléter |
+| 30     | 32×32 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+| 50     | 32×32 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Standard      | 0.15  | à compléter         | à compléter |
 
 ## Installation
 
@@ -80,9 +92,8 @@ dataset/
 Ce qui permet l'utilisation de `ImageFolder` from `torchvision.datasets`.
 ## Prochaines étapes
 
-- Support GPU sur Google Colab pour accélérer l'entraînement
 - Compléter le tableau de résultats avec différentes combinaisons d'hyperparamètres
-- Programmation propre et sécurisée : typage, docstrings, gestion des erreurs
+- Programmation propre et sécurisée : docstrings
 - Source dans le REAMDE (motivation du split et de la structure du réseau : MNIST) (lien dataset kaggle)
 - Traduction en anglais
 
