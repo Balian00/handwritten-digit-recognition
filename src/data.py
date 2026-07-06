@@ -1,12 +1,11 @@
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 import torchvision.transforms as T
 import torchvision.datasets as D
 from const import H, W, AUGMENTATION, CROP, ROTATE, BRIGHTNESS, CONTRAST, std, mean
-from PIL import Image as PILImage
 
 
 # object of transformation
-def getTransform(augmentation=AUGMENTATION):
+def get_transform(augmentation: bool = AUGMENTATION) -> T.Compose:
     transforms = [
         T.Resize((H, W)),
         T.Grayscale(),
@@ -23,10 +22,10 @@ def getTransform(augmentation=AUGMENTATION):
     ]
     return T.Compose(transforms)
 
-def getDataset(root) :
-    dataset = D.ImageFolder(root, transform=getTransform(AUGMENTATION)) # create object dataset (from torch)
+def get_dataset(root : str, augmentation : bool) -> Dataset :
+    dataset = D.ImageFolder(root, transform=get_transform(augmentation)) # create object dataset (from torch)
     return dataset
 
-def getDataLoader(dataset, batch_size, shuffle) :
+def get_dataloader(dataset : Dataset, batch_size : int, shuffle : bool) -> DataLoader :
     dataLoader = DataLoader(dataset, batch_size, shuffle)
     return dataLoader
