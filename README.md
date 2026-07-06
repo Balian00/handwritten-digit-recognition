@@ -1,6 +1,6 @@
 # Handwritten Digit Classifier
 
-Un classifieur de chiffres manuscrits (0-9) basé sur un CNN (réseau de neurones convolutionnel), entraîné avec PyTorch sur un dataset Kaggle.
+Un classifieur de chiffres manuscrits (0-9) basé sur un CNN (réseau de neurones convolutionnel), entraîné avec [PyTorch](https://pytorch.org/) sur un [dataset Kaggle](https://www.kaggle.com/datasets/panghalvishesh/handwritten-digit).
 
 ## Utilisation de l'IA
 
@@ -8,7 +8,7 @@ Ce README ainsi que les messages affichés dans la console (print statements) on
 
 ## Statut actuel (V2)
 
-Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testés à la main. Le modèle a été entraîné sur un dataset Kaggle de chiffres manuscrits avec augmentation de données (crop aléatoire, rotation légère, variation de contraste et de luminosité), ce qui améliore significativement la généralisation par rapport à la V1.
+Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testés à la main. Le modèle a été entraîné sur un dataset Kaggle de chiffres manuscrits avec augmentation de données (crop aléatoire, rotation légère aléatoire, variation de contraste et de luminosité aléatoires), ce qui améliore significativement la généralisation par rapport à la V1.
 
 *Remarque : Par la quasi-totalité des chiffres manuscrits testés à la main, on sous-entend tout chiffres relativement bien écrit comparé au dataset. En effet, le dataset comprend des représentations de chiffres parfois différentes de celles que le lecteur fait. Par conséquent, il vous est suggéré de comparer votre écriture à celle du dataset lors de tests manuels via `test_one`.*
 
@@ -24,17 +24,34 @@ Le CNN reconnaît correctement la quasi-totalité des chiffres manuscrits testé
 
 | Epochs | H×W   | Learning rate | Augmentation  | Split | Accuracy (test set) | Time        |
 |--------|-------|---------------|---------------|-------|---------------------|-------------|
-| 30     | 28×28 | 0.01          | Standard      | 0.2   | à compléter | à compléter |
-| 15     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
-| 50     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
-| 30     | 28×28 | 0.001         | Standard      | 0.2   | à compléter         | à compléter |
-| 50     | 28×28 | 0.001         | Standard      | 0.2   | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | False         | 0.2   | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Légère        | 0.2   | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Agressive     | 0.2   | à compléter         | à compléter |
-| 30     | 32×32 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
-| 50     | 32×32 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
-| 30     | 28×28 | 0.01          | Standard      | 0.15  | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
+| 15     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
+| 50     | 28×28 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
+| 30     | 28×28 | 0.001         | Standard      | 0.14  | à compléter         | à compléter |
+| 50     | 28×28 | 0.001         | Standard      | 0.14  | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | False         | 0.14  | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Légère        | 0.14  | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Agressive     | 0.14  | à compléter         | à compléter |
+| 30     | 32×32 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
+| 50     | 32×32 | 0.01          | Standard      | 0.14  | à compléter         | à compléter |
+| 30     | 28×28 | 0.01          | Standard      | 0.2   | à compléter         | à compléter |
+
+### Epochs, dimensions, split, learning rate
+Dans le standart MNIST, on retrouve les valeurs suivantes :
+- Epochs = 10 à 30, ici 30 est choisi pour un test principale
+- H = W = 28
+- LR = 0.01
+- Split = 0.14 (60K train + 10K test)
+
+### Augmentation 
+L'augmentation standart choisie correspond à :
+- un crop de 4 pixel
+- une rotation d'un angle de 10° maximum
+- une variation de luminosité et de contraste 0.3
+Tandis qu'une légère correspond à la moitié des valeurs et une agressive aux doubles
+
+### Time
+Afin de permettre une comparaison la moins biaisée possible, les tests sont standardisé sur ... rendu accessible par la plateforme Kaggle. Le notebook utilisé pour les tests se trouve au lien suivant : https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
 
 ## Installation
 
@@ -93,8 +110,9 @@ Ce qui permet l'utilisation de `ImageFolder` from `torchvision.datasets`.
 ## Prochaines étapes
 
 - Compléter le tableau de résultats avec différentes combinaisons d'hyperparamètres
-- Programmation propre et sécurisée : docstrings
-- Source dans le REAMDE (motivation du split et de la structure du réseau : MNIST) (lien dataset kaggle)
+- PEP8 ?
+- Code le plus court
+- Optimisation
 - Traduction en anglais
 
 ## Continuité possible
