@@ -28,37 +28,78 @@ Compared to V2, this version focuses on code quality rather than new features:
 
 ## Results
 
-| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy (test set) | Time   |
-|--------|-------|---------------|--------------|-------|---------------------|--------|
-| 30     | 28×28 | 0.01          | Standard     | 0.14  | 93.00%              | 9.6min |
-| 15     | 28×28 | 0.01          | Standard     | 0.14  | 90.01%              | 4.8min |
-| 50     | 28×28 | 0.01          | Standard     | 0.14  | 95.23%              | 15.9min|
-| 30     | 28×28 | 0.001         | Standard     | 0.14  | 70.02%              | 9.7min |
-| 50     | 28×28 | 0.001         | Standard     | 0.14  | 77.18%              | 15.9min|
-| 30     | 28×28 | 0.01          | False        | 0.14  | 92.44%              | 6.8min |
-| 30     | 28×28 | 0.01          | Light        | 0.14  | 94.73%              | 9.6min |
-| 30     | 28×28 | 0.01          | Aggressive   | 0.14  | 78.96%              | 9.5min |
-| 30     | 32×32 | 0.01          | Standard     | 0.14  | 94.37%              | 9.7min |
-| 50     | 32×32 | 0.01          | Standard     | 0.14  | 95.36%              | 16.1min|
-| 30     | 28×28 | 0.01          | Standard     | 0.2   | 92.22%              | 9.4min |
-### Epochs, dimensions, split, learning rate
-In the standard MNIST setup, the following values are typically found:
-- Epochs = 10 to 30, here 30 is chosen for a main test
-- H = W = 28
-- LR = 0.01
-- Split = 0.14 (60K train + 10K test)
+All experiments were run on a single T4 GPU (Kaggle). The notebook used is available at: https://www.kaggle.com/code/balianfranquet/notebook78580c1166
 
-### Augmentation
-The standard augmentation chosen corresponds to:
-- a crop of 4 pixels
-- a rotation of up to 10°
-- a brightness and contrast variation of 0.3
+### Reference run
 
-A light augmentation corresponds to half these values, and an aggressive one to double them.
+All parameters are set to their standard values. Each section below varies one parameter at a time while keeping the others fixed at these reference values.
 
-### Time
-To allow for the least biased comparison possible, tests are standardized on one T4 GPU made accessible by the Kaggle platform. The notebook used for the tests can be found at the following link: https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
+| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy | Time    |
+|--------|-------|---------------|--------------|-------|----------|---------|
+| 30     | 28×28 | 0.01          | Standard     | 0.14  | 93.00%   | 9.6min  |
 
+These values follow the standard MNIST setup: 30 epochs, 28×28 images, lr=0.01, split=0.14 (equivalent to ~60K train / 10K test).
+
+---
+
+### Effect of epochs
+
+| Epochs | Accuracy | Time    |
+|--------|----------|---------|
+| 15     | 90.01%   | 4.8min  |
+| **30** | **93.00%** | **9.6min** |
+| 50     | 95.23%   | 15.9min |
+
+More epochs improve accuracy at the cost of training time. The gain from 30 to 50 epochs (~2%) may not justify doubling the time depending on the use case.
+
+---
+
+### Effect of learning rate
+
+| Learning rate | Accuracy | Time   |
+|---------------|----------|--------|
+| **0.01**      | **93.00%** | **9.6min** |
+| 0.001         | 70.02%   | 9.7min |
+
+A learning rate of 0.001 significantly underperforms with 30 epochs — the model converges too slowly to reach a good solution in the allotted time.
+
+---
+
+### Effect of augmentation
+
+Standard augmentation: crop=4px, rotation=±10°, brightness/contrast=0.3.  
+Light: half these values. Aggressive: double these values.
+
+| Augmentation  | Accuracy | Time   |
+|---------------|----------|--------|
+| False         | 92.44%   | 6.8min |
+| Light         | 94.73%   | 9.6min |
+| **Standard**  | **93.00%** | **9.6min** |
+| Aggressive    | 78.96%   | 9.5min |
+
+Light augmentation outperforms both no augmentation and standard augmentation — suggesting that moderate data augmentation improves generalization while aggressive augmentation degrades training quality by distorting images too heavily.
+
+---
+
+### Effect of input size
+
+| H×W     | Accuracy | Time   |
+|---------|----------|--------|
+| **28×28** | **93.00%** | **9.6min** |
+| 32×32   | 94.37%   | 9.7min |
+
+Slightly larger input yields a modest accuracy gain with minimal time cost.
+
+---
+
+### Effect of train/test split
+
+| Split  | Accuracy | Time   |
+|--------|----------|--------|
+| **0.14** | **93.00%** | **9.6min** |
+| 0.2    | 92.22%   | 9.4min |
+
+A larger test set (0.2) slightly reduces accuracy, likely due to fewer training samples rather than a fundamental difference in model quality.
 ## Installation
 
 Create and activate a virtual environment, then install the dependencies listed in `requirements.txt`.
