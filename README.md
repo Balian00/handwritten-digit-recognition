@@ -28,20 +28,19 @@ Compared to V2, this version focuses on code quality rather than new features:
 
 ## Results
 
-| Epochs | H×W   | Learning rate | Augmentation  | Split | Accuracy (test set) | Time        |
-|--------|-------|---------------|---------------|-------|---------------------|-------------|
-| 30     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
-| 15     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
-| 50     | 28×28 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
-| 30     | 28×28 | 0.001         | Standard      | 0.14  | to be completed     | to be completed |
-| 50     | 28×28 | 0.001         | Standard      | 0.14  | to be completed     | to be completed |
-| 30     | 28×28 | 0.01          | False         | 0.14  | to be completed     | to be completed |
-| 30     | 28×28 | 0.01          | Light         | 0.14  | to be completed     | to be completed |
-| 30     | 28×28 | 0.01          | Aggressive    | 0.14  | to be completed     | to be completed |
-| 30     | 32×32 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
-| 50     | 32×32 | 0.01          | Standard      | 0.14  | to be completed     | to be completed |
-| 30     | 28×28 | 0.01          | Standard      | 0.2   | to be completed     | to be completed |
-
+| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy (test set) | Time   |
+|--------|-------|---------------|--------------|-------|---------------------|--------|
+| 30     | 28×28 | 0.01          | Standard     | 0.14  | 93.00%              | 9.6min |
+| 15     | 28×28 | 0.01          | Standard     | 0.14  | 90.01%              | 4.8min |
+| 50     | 28×28 | 0.01          | Standard     | 0.14  | 95.23%              | 15.9min|
+| 30     | 28×28 | 0.001         | Standard     | 0.14  | 70.02%              | 9.7min |
+| 50     | 28×28 | 0.001         | Standard     | 0.14  | 77.18%              | 15.9min|
+| 30     | 28×28 | 0.01          | False        | 0.14  | 92.44%              | 6.8min |
+| 30     | 28×28 | 0.01          | Light        | 0.14  | 94.73%              | 9.6min |
+| 30     | 28×28 | 0.01          | Aggressive   | 0.14  | 78.96%              | 9.5min |
+| 30     | 32×32 | 0.01          | Standard     | 0.14  | 94.37%              | 9.7min |
+| 50     | 32×32 | 0.01          | Standard     | 0.14  | 95.36%              | 16.1min|
+| 30     | 28×28 | 0.01          | Standard     | 0.2   | 92.22%              | 9.4min |
 ### Epochs, dimensions, split, learning rate
 In the standard MNIST setup, the following values are typically found:
 - Epochs = 10 to 30, here 30 is chosen for a main test
@@ -58,7 +57,7 @@ The standard augmentation chosen corresponds to:
 A light augmentation corresponds to half these values, and an aggressive one to double them.
 
 ### Time
-To allow for the least biased comparison possible, tests are standardized on TO BE COMPLETED made accessible by the Kaggle platform. The notebook used for the tests can be found at the following link: https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
+To allow for the least biased comparison possible, tests are standardized on one T4 GPU made accessible by the Kaggle platform. The notebook used for the tests can be found at the following link: https://www.kaggle.com/code/balianfranquet/notebook78580c1166.
 
 ## Installation
 
