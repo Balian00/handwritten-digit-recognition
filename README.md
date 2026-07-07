@@ -4,7 +4,15 @@ A handwritten digit classifier (0-9) based on a CNN (convolutional neural networ
 
 ## Use of AI
 
-This README, as well as the messages printed to the console (print statements), were generated with the help of an AI. All content was reviewed and validated by the author. Everything else — model architecture, training and evaluation logic, data handling, debugging — was written by me.
+This project was built entirely by me — architecture, training logic, data pipeline, debugging, and all design decisions.
+
+[AI](https://claude.ai/) was used in a limited, assistive capacity for the following:
+
+- **Prints**: written by me, minor aesthetic improvements suggested by AI (alignment, symbols).
+- **README**: structured and initially written by me; AI lightly rephrased some sections for fluency and corrected grammar.
+- **Docstrings**: written by me, AI translated them to English and reformatted them to Google style.
+- **Results table**: data and analysis are mine; AI reformatted the table into the per-parameter breakdown format.
+- **Two minor optimizations**: AI suggested adding `num_workers=2` and `pin_memory=True` to the DataLoader, and using a larger batch size during evaluation — both one-line changes.
 
 ## Current status (V3)
 
@@ -28,15 +36,15 @@ Compared to V2, this version focuses on code quality rather than new features:
 
 ## Results
 
-All experiments were run on a single T4 GPU (Kaggle). The notebook used is available at: https://www.kaggle.com/code/balianfranquet/notebook78580c1166
+All experiments were run on a single T4 GPU (Kaggle). The notebook used is available at: https://www.kaggle.com/code/balianfranquet/training-cnn-model-to-digit-recognition
 
 ### Reference run
 
 All parameters are set to their standard values. Each section below varies one parameter at a time while keeping the others fixed at these reference values.
 
-| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy | Time    |
-|--------|-------|---------------|--------------|-------|----------|---------|
-| 30     | 28×28 | 0.01          | Standard     | 0.14  | 93.00%   | 9.6min  |
+| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy | Time   |
+|--------|-------|---------------|--------------|-------|----------|--------|
+| 30     | 28×28 | 0.01          | Standard     | 0.14  | 93.00%   | 9.6min |
 
 These values follow the standard MNIST setup: 30 epochs, 28×28 images, lr=0.01, split=0.14 (equivalent to ~60K train / 10K test).
 
@@ -44,17 +52,21 @@ These values follow the standard MNIST setup: 30 epochs, 28×28 images, lr=0.01,
 
 ### Effect of epochs
 
+The number of epochs controls how many times the model sees the entire dataset during training. More epochs generally improve accuracy, at the cost of training time.
+
 | Epochs | Accuracy | Time    |
 |--------|----------|---------|
 | 15     | 90.01%   | 4.8min  |
 | **30** | **93.00%** | **9.6min** |
 | 50     | 95.23%   | 15.9min |
 
-More epochs improve accuracy at the cost of training time. The gain from 30 to 50 epochs (~2%) may not justify doubling the time depending on the use case.
+More epochs consistently improve accuracy. The gain from 30 to 50 epochs (~2%) is meaningful and the time cost remains reasonable.
 
 ---
 
 ### Effect of learning rate
+
+The learning rate controls how large each weight update step is during training. Too high and the model overshoots; too low and it converges too slowly.
 
 | Learning rate | Accuracy | Time   |
 |---------------|----------|--------|
@@ -67,6 +79,8 @@ A learning rate of 0.001 significantly underperforms with 30 epochs — the mode
 
 ### Effect of augmentation
 
+Data augmentation artificially increases the diversity of training images by applying random transformations at load time. This helps the model generalize to real-world images rather than overfitting to the clean dataset.
+
 Standard augmentation: crop=4px, rotation=±10°, brightness/contrast=0.3.  
 Light: half these values. Aggressive: double these values.
 
@@ -77,29 +91,44 @@ Light: half these values. Aggressive: double these values.
 | **Standard**  | **93.00%** | **9.6min** |
 | Aggressive    | 78.96%   | 9.5min |
 
-Light augmentation outperforms both no augmentation and standard augmentation — suggesting that moderate data augmentation improves generalization while aggressive augmentation degrades training quality by distorting images too heavily.
+While training without augmentation yields a competitive test set accuracy (92.44%), it fails to generalize to real handwritten images — tests on images from `test_data/` show noticeably worse recognition compared to augmented models. Light augmentation achieves the best balance: it improves both test set accuracy and real-world generalization without over-distorting the training images as aggressive augmentation does.
 
 ---
 
 ### Effect of input size
+
+The input size determines the resolution at which images are fed into the network. Larger images preserve more detail but require more computation.
 
 | H×W     | Accuracy | Time   |
 |---------|----------|--------|
 | **28×28** | **93.00%** | **9.6min** |
 | 32×32   | 94.37%   | 9.7min |
 
-Slightly larger input yields a modest accuracy gain with minimal time cost.
+Slightly larger input yields a modest accuracy gain (~1.4%) with virtually no additional time cost.
 
 ---
 
 ### Effect of train/test split
+
+The split ratio determines what fraction of the dataset is reserved for testing. A larger test set gives a more reliable accuracy estimate but leaves fewer samples for training.
 
 | Split  | Accuracy | Time   |
 |--------|----------|--------|
 | **0.14** | **93.00%** | **9.6min** |
 | 0.2    | 92.22%   | 9.4min |
 
-A larger test set (0.2) slightly reduces accuracy, likely due to fewer training samples rather than a fundamental difference in model quality.
+The standard MNIST split (0.14) slightly outperforms the larger test split, likely due to having more training data available.
+
+---
+
+### Optimal configuration
+
+Based on the results above, the most promising configuration combines the best-performing value from each parameter: 50 epochs, 32×32 input, lr=0.01, light augmentation, split=0.14.
+
+| Epochs | H×W   | Learning rate | Augmentation | Split | Accuracy | Time |
+|--------|-------|---------------|--------------|-------|----------|------|
+| 50     | 32×32 | 0.01          | Light        | 0.14  | 95.97% | 13.9min |
+
 ## Installation
 
 Create and activate a virtual environment, then install the dependencies listed in `requirements.txt`.
@@ -154,10 +183,6 @@ dataset/
 9/
 ```
 This allows the use of `ImageFolder` from `torchvision.datasets`.
-
-## Next steps
-
-- Complete the results table with different combinations of hyperparameters
 
 ## Possible continuations
 
