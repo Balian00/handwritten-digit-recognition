@@ -2,6 +2,10 @@ from torch.utils.data import DataLoader, Dataset
 import torchvision.transforms as T
 import torchvision.datasets as D
 from const import H, W, AUGMENTATION, CROP, ROTATE, BRIGHTNESS, CONTRAST, std, mean
+import torch
+
+def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers: int = 2, pin_memory: bool = torch.cuda.is_available()) -> DataLoader:
+    return DataLoader(dataset, batch_size, shuffle, num_workers=num_workers, pin_memory=pin_memory)
 
 
 def get_transform(augmentation: bool = AUGMENTATION) -> T.Compose:
@@ -53,7 +57,7 @@ def get_dataset(root: str, augmentation: bool) -> Dataset:
     
 
 
-def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers: int = 2, pin_memory: bool = True) -> DataLoader: # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer
+def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers: int = 2, pin_memory: bool = torch.cuda.is_available()) -> DataLoader: # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer
     """Creates a DataLoader from a dataset.
 
     Args:
@@ -64,4 +68,4 @@ def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers
     Returns:
         An iterable DataLoader producing batches of tensors.
     """
-    return DataLoader(dataset, batch_size, shuffle, num_workers=2, pin_memory=True) # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer
+    return DataLoader(dataset, batch_size, shuffle, num_workers=num_workers, pin_memory=pin_memory) # num_workers: parallel batch prefetch; pin_memory: faster CPU→GPU transfer
