@@ -26,8 +26,12 @@ def test(model: nn.Module, test_dataset: Dataset) -> float:
     model.eval()
     device = next(model.parameters()).device
     correct = 0
-    with torch.no_grad():  # disables gradient graph, saves memory and speeds up inference
-        data_loader = get_dataloader(test_dataset, 256, False) # larger batch at eval: no backprop, more memory available
+    with (
+        torch.no_grad()
+    ):  # disables gradient graph, saves memory and speeds up inference
+        data_loader = get_dataloader(
+            test_dataset, 256, False
+        )  # larger batch at eval: no backprop, more memory available
         for images, labels in data_loader:
             images, labels = images.to(device), labels.to(device)
             predictions = model(images)  # __call__ triggers forward() + nn.Module hooks
@@ -82,8 +86,7 @@ def train(train_dataset: Dataset, test_dataset: Dataset) -> tuple[float, float]:
                 torch.save(model.state_dict(), MODEL_PATH)
             except OSError:
                 print(
-                    "  Error: unable to save model.pth. "
-                    "Check the folder permissions."
+                    "  Error: unable to save model.pth. Check the folder permissions."
                 )
                 raise
             best_accuracy = current_accuracy
@@ -94,7 +97,7 @@ def train(train_dataset: Dataset, test_dataset: Dataset) -> tuple[float, float]:
     print("\n" + "─" * 40)
     print("  Training complete.")
     print(f"  Best accuracy : {best_accuracy:.2f}%")
-    print(f"  Total time    : {elapsed:.1f}s  ({elapsed/60:.1f} min)")
+    print(f"  Total time    : {elapsed:.1f}s  ({elapsed / 60:.1f} min)")
     print("─" * 40)
     return best_accuracy, elapsed
 

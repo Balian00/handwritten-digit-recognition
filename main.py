@@ -126,7 +126,7 @@ def main(mode: str, image: str | None) -> None:
             print(" ok")
             tensor = get_transform(False)(img)
             test_one(model, tensor)
-        else :
+        else:
             print(f"  Loading dataset from '{DATASET_ROOT}'...", end="", flush=True)
             try:
                 dataset = get_dataset(DATASET_ROOT, False)
