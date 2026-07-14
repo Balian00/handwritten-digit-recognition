@@ -1,9 +1,9 @@
 import torch
 import time
-from data import get_dataloader
-from model import DigitCNN
+from src.data import get_dataloader
+from src.model import DigitCNN
 import torch.nn as nn
-from const import EPOCHS, LR
+from src.const import EPOCHS, LR
 from torch.utils.data import Dataset
 from pathlib import Path
 

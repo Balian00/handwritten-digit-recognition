@@ -1,19 +1,19 @@
 import click
 import torch
 import time
-from engine import train, test, test_one
-from model import DigitCNN
-from const import SPLIT, AUGMENTATION, GENERATOR
+from src.engine import train, test, test_one
+from src.model import DigitCNN
+from src.const import SPLIT, AUGMENTATION, GENERATOR
 from torch.utils.data import random_split, Dataset
-from data import get_dataset, get_transform
+from src.data import get_dataset, get_transform
 import random
 from PIL import Image, UnidentifiedImageError
 from pathlib import Path
 
-MODEL_PATH = Path(__file__).parent / "model.pth"
+MODEL_PATH = Path(__file__).parent / "src" / "model.pth"
 
 
-DATASET_ROOT = "../dataset"
+DATASET_ROOT = "dataset"
 
 
 def get_random_index(dataset: Dataset) -> int:

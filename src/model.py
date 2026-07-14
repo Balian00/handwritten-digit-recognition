@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-from const import H, W
+from src.const import H, W
 
 
 class DigitCNN(nn.Module):

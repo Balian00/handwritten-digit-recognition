@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader, Dataset
 import torchvision.transforms as T
 import torchvision.datasets as D
-from const import H, W, AUGMENTATION, CROP, ROTATE, BRIGHTNESS, CONTRAST, std, mean
+from src.const import H, W, AUGMENTATION, CROP, ROTATE, BRIGHTNESS, CONTRAST, std, mean
 import torch
 
 def get_dataloader(dataset: Dataset, batch_size: int, shuffle: bool, num_workers: int = 2, pin_memory: bool = torch.cuda.is_available()) -> DataLoader:
